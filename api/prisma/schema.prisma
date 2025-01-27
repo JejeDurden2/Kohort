@@ -1,0 +1,567 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_SSL")
+}
+
+model Organization {
+  id                      String                   @id @unique @db.Text
+  name                    String                   @db.Text
+  slug                    String?                  @db.Text
+  clerkId                 String                   @unique @map("clerk_id") @db.Text
+  cashbackBankId          String?                  @unique @map("cashback_bank_id") @db.Text
+  stripeCustomerId        String?                  @unique @map("stripe_customer_id") @db.Text
+  imageUrl                String?                  @map("image_url") @db.Text
+  fromEmailName           String?                  @map("from_email_name") @db.Text
+  kohortAcquisitionFees   Decimal                  @default(10) @map("kohort_acquisition_fees") @db.Decimal(5, 2)
+  websiteUrl              String?                  @map("website_url") @db.Text
+  billingEmails           String[]                 @map("billing_emails")
+  svixApplicationId       String?                  @unique @map("svix_application_id") @db.Text
+  ambassadorEnabled       Boolean                  @default(false) @map("ambassador_enabled")
+  organizationInvitations OrganizationInvitation[]
+  members                 OrganizationMembership[]
+  customers               Customer[]
+  apiKeys                 ApiKey[]
+  checkoutSessions        CheckoutSession[]
+  address                 Address?                 @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  addressId               String?                  @unique @map("address_id") @db.Text
+  createdBy               String                   @default("system") @map("created_by") @db.Text
+  createdAt               DateTime                 @default(now()) @map("created_at")
+  updatedAt               DateTime                 @default(now()) @updatedAt @map("updated_at")
+  updatedBy               String?                  @default("system") @map("updated_by")
+  deletedAt               DateTime?                @map("deleted_at")
+  paymentIntent           PaymentIntent[]
+  paymentGroup            PaymentGroup[]
+  paymentGroupSettings    PaymentGroupSettings[]
+  webhooks                Webhook[]
+  Bill                    Bill[]
+  brandSettings           BrandSettings[]
+  TransactionalEmail      TransactionalEmail[]
+  orders                  Order[]
+  ambassadors             Ambassador[]
+
+  @@map("organizations")
+}
+
+model User {
+  id                  String                   @id @unique @db.Text
+  clerkId             String                   @unique @map("clerk_id") @db.Text
+  firstName           String?                  @map("first_name") @db.Text
+  lastName            String?                  @map("last_name") @db.Text
+  primaryEmailAddress String                   @map("primary_email_address") @db.Text
+  primaryPhoneNumber  String?                  @map("primary_phone_number") @db.Text
+  imageUrl            String                   @map("image_url") @db.Text
+  lastSignInAt        DateTime?                @map("last_sign_in_at")
+  locale              Locale                   @default(fr_FR)
+  organizations       OrganizationMembership[]
+  createdAt           DateTime                 @default(now()) @map("created_at")
+  createdBy           String                   @default("system") @map("created_by") @db.Text
+  updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at")
+  updatedBy           String                   @default("system") @map("updated_by") @db.Text
+  deletedAt           DateTime?                @map("deleted_at")
+
+  @@map("users")
+}
+
+model OrganizationInvitation {
+  id             String       @id @unique @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @map("organization_id") @db.Text
+  emailAddress   String       @map("email_address") @db.Text
+  role           String       @db.Text
+  status         String       @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+
+  @@map("organization_invitations")
+}
+
+model OrganizationMembership {
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String       @map("user_id") @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @map("organization_id") @db.Text
+  role           String       @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+
+  @@id([organizationId, userId])
+  @@map("organization_memberships")
+}
+
+model Customer {
+  id                String            @id @unique @db.Text
+  emailAddress      String            @map("email_address") @db.Text
+  firstName         String?           @map("first_name") @db.Text
+  lastName          String?           @map("last_name") @db.Text
+  phoneNumber       String?           @map("primary_phone_number") @db.Text
+  livemode          Boolean           @default(true)
+  locale            Locale            @default(fr_FR)
+  isBlocked         Boolean           @default(false) @map("is_blocked")
+  organization      Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId    String            @map("organization_id") @db.Text
+  checkoutSessions  CheckoutSession[]
+  clientReferenceId String?           @map("client_reference_id") @db.Text
+  paymentIntents    PaymentIntent[]
+  metadata          Json?             @db.Json
+  createdAt         DateTime          @default(now()) @map("created_at")
+  createdBy         String            @default("system") @map("created_by") @db.Text
+  updatedAt         DateTime          @default(now()) @updatedAt @map("updated_at")
+  blockedAt         DateTime?         @map("blocked_at")
+  blockedBy         String?           @map("blocked_by") @db.Text
+  updatedBy         String            @default("system") @map("updated_by") @db.Text
+  deletedAt         DateTime?         @map("deleted_at")
+  paymentGroups     PaymentGroup[]
+  orders            Order[]
+
+  @@unique([organizationId, emailAddress, livemode])
+  @@map("customers")
+}
+
+model ApiKey {
+  id             String       @id @unique @db.Text
+  key            String       @db.Text
+  hashedKey      String       @unique @map("hashed_key") @db.Text
+  name           String       @db.Text
+  note           String?      @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @map("organization_id") @db.Text
+  type           ApiKeyType   @default(SECRET)
+  livemode       Boolean      @default(true)
+  endDate        DateTime?    @map("end_date")
+  lastUsedAt     DateTime?    @map("last_used_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  createdBy      String       @default("system") @map("created_by") @db.Text
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+  updatedBy      String       @default("system") @map("updated_by") @db.Text
+
+  @@unique([key, livemode, type])
+  @@map("api_keys")
+}
+
+model CheckoutSession {
+  id                       String                @id @unique @db.Text
+  shareId                  String                @unique @map("share_id") @db.Text
+  livemode                 Boolean               @default(true)
+  organization             Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId           String                @map("organization_id") @db.Text
+  url                      String                @db.Text
+  amountTotal              Int                   @map("amount_total") @db.Integer
+  status                   CheckoutSessionStatus @default(OPEN)
+  successUrl               String?               @map("success_url") @db.Text
+  cancelUrl                String?               @map("cancel_url") @db.Text
+  customerEmail            String?               @map("customer_email") @db.Text
+  customerFirstName        String?               @map("customer_first_name") @db.Text
+  customerLastName         String?               @map("customer_last_name") @db.Text
+  customerPhoneNumber      String?               @map("customer_phone_number") @db.Text
+  customer                 Customer?             @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId               String?               @map("customer_id") @db.Text
+  currency                 Currency              @default(EUR)
+  locale                   Locale                @default(fr_FR)
+  metadata                 Json?                 @db.Json
+  lineItems                LineItem[]
+  paymentIntent            PaymentIntent?
+  paymentGroup             PaymentGroup?         @relation(fields: [paymentGroupShareId], references: [shareId], onDelete: SetNull)
+  paymentGroupShareId      String?               @map("payment_group_share_id") @db.Text
+  clientReferenceId        String?               @map("client_reference_id") @db.Text
+  paymentClientReferenceId String?               @map("payment_client_reference_id") @db.Text
+  expiresAt                DateTime              @default(dbgenerated("NOW() + interval '1 day'")) @map("expires_at")
+  completedAt              DateTime?             @map("completed_at")
+  createdAt                DateTime              @default(now()) @map("created_at")
+  createdBy                String                @default("system") @map("created_by") @db.Text
+  updatedAt                DateTime              @default(now()) @updatedAt @map("updated_at")
+  updatedBy                String                @default("system") @map("updated_by") @db.Text
+
+  @@map("checkout_sessions")
+}
+
+model LineItem {
+  id                String          @id @unique @db.Text
+  checkoutSession   CheckoutSession @relation(fields: [checkoutSessionId], references: [id], onDelete: Cascade)
+  checkoutSessionId String          @map("checkout_session_id") @db.Text
+  name              String          @db.Text
+  price             Int             @db.Integer
+  quantity          Int             @default(1)
+  type              LineItemType    @default(PRODUCT)
+  amountTotal       Int             @map("amount_total") @db.Integer
+  imageUrl          String?         @map("image_url") @db.Text
+  description       String?         @db.Text
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @default(now()) @updatedAt @map("updated_at")
+
+  @@map("line_items")
+}
+
+model Address {
+  id                 String        @id @unique @db.Text
+  organization       Organization?
+  addressLine1       String?       @map("address_line_1") @db.Text
+  addressLine2       String?       @map("address_line_2") @db.Text
+  city               String?       @db.Text
+  postalCode         String?       @map("postal_code") @db.Text
+  country            String?       @db.Text
+  state              String?       @db.Text
+  companyName        String?       @map("company_name") @db.Text
+  vatNumber          String?       @map("vat_number") @db.Text
+  registrationNumber String?       @map("registration_number") @db.Text
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  @@map("addresses")
+}
+
+model PaymentIntent {
+  id                   String              @id @unique @db.Text
+  livemode             Boolean             @default(true)
+  amount               Int                 @db.Integer
+  amountCaptured       Int?                @map("amount_captured") @db.Integer
+  amountCashback       Int?                @map("amount_cashback") @db.Integer
+  currency             Currency            @default(EUR)
+  customer             Customer?           @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId           String?             @map("customer_id") @db.Text
+  customerEmail        String?             @map("customer_email") @db.Text
+  organization         Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String              @map("organization_id") @db.Text
+  checkoutSession      CheckoutSession     @relation(fields: [checkoutSessionId], references: [id])
+  checkoutSessionId    String              @unique @map("checkout_session_id") @db.Text
+  metadata             Json?               @db.Json
+  status               PaymentIntentStatus
+  riskLevel            RiskLevel           @default(LOW) @map("risk_level")
+  paymentGroup         PaymentGroup?       @relation(fields: [paymentGroupId], references: [id])
+  paymentGroupId       String?             @map("payment_group_id") @db.Text
+  applicationFeeAmount Int?                @map("application_fee_amount") @db.Integer
+  clientReferenceId    String?             @map("client_reference_id") @db.Text
+  token                String?             @db.Text
+  createdAt            DateTime            @default(now()) @map("created_at")
+  createdBy            String              @default("system") @map("created_by") @db.Text
+  updatedAt            DateTime            @default(now()) @updatedAt @map("updated_at")
+  updatedBy            String              @default("system") @map("updated_by") @db.Text
+  canceledAt           DateTime?           @map("canceled_at")
+  ambassador           Ambassador?         @relation(fields: [ambassadorId], references: [id], onDelete: SetNull)
+  ambassadorId         String?             @map("ambassador_id") @db.Text
+
+  @@map("payment_intents")
+}
+
+model PaymentGroup {
+  id                   String                  @id @unique @db.Text
+  shareId              String                  @unique @map("share_id") @db.Text
+  livemode             Boolean                 @default(true)
+  organization         Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String                  @map("organization_id") @db.Text
+  customer             Customer                @relation(fields: [customerId], references: [id])
+  customerId           String                  @map("customer_id") @db.Text
+  creatorEmail         String?                 @map("owner_email") @db.Text
+  paymentIntents       PaymentIntent[]
+  status               PaymentGroupStatus      @default(OPEN)
+  metadata             Json?                   @db.Json
+  expiresAt            DateTime                @default(dbgenerated("NOW() + interval '7 day'")) @map("expires_at")
+  midExpireAt          DateTime?               @map("mid_expire_at")
+  jMinus2ExpireAt      DateTime?               @map("j_minus_2_expire_at")
+  jPlus3StartAt        DateTime?               @map("j_plus_3_start_at")
+  reminderEmailSent    ReminderEmailSentStatus @default(NOT_SENT) @map("reminder_email_sent")
+  createdAt            DateTime                @default(now()) @map("created_at")
+  createdBy            String                  @default("system") @map("created_by") @db.Text
+  updatedAt            DateTime                @default(now()) @updatedAt @map("updated_at")
+  updatedBy            String?                 @default("system") @map("updated_by") @db.Text
+  canceledAt           DateTime?               @map("canceled_at")
+  completedAt          DateTime?               @map("completed_at")
+  checkoutSessions     CheckoutSession[]
+  paymentGroupSettings PaymentGroupSettings?
+  orders               Order[]
+
+  @@map("payment_groups")
+}
+
+model PaymentGroupSettings {
+  id                    String          @id @unique @db.Text
+  organization          Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId        String?         @map("organization_id") @db.Text
+  paymentGroup          PaymentGroup?   @relation(fields: [paymentGroupId], references: [id], onDelete: Cascade)
+  paymentGroupId        String?         @unique @map("payment_group_id") @db.Text
+  livemode              Boolean         @default(true)
+  whatsappCommunication Boolean         @default(true) @map("whatsapp_communication")
+  discountType          DiscountType    @default(PERCENTAGE) @map("discount_type")
+  discountLevels        DiscountLevel[]
+  maxParticipants       Int             @default(15) @map("max_participants") @db.Integer
+  minutesDuration       Int             @default(10080) @map("minutes_duration") @db.Integer
+  minPurchaseValue      Int             @default(3000) @map("min_purchase_value") @db.Integer
+  createdAt             DateTime        @default(now()) @map("created_at")
+  createdBy             String          @default("system") @map("created_by") @db.Text
+  updatedAt             DateTime        @default(now()) @updatedAt @map("updated_at")
+  updatedBy             String          @default("system") @map("updated_by") @db.Text
+
+  @@map("payment_group_settings")
+}
+
+model DiscountLevel {
+  id                     String                @id @unique @db.Text
+  paymentGroupSettings   PaymentGroupSettings? @relation(fields: [paymentGroupSettingsId], references: [id], onDelete: Cascade)
+  paymentGroupSettingsId String?               @map("payment_group_settings_id") @db.Text
+  level                  Int                   @db.Integer
+  value                  Int                   @db.Integer
+  participantsToUnlock   Int                   @default(2) @map("participants_to_unlock") @db.Integer
+  createdAt              DateTime              @default(now()) @map("created_at")
+
+  @@map("discount_levels")
+}
+
+model BrandSettings {
+  id                   String       @id @unique @db.Text
+  organization         Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String       @map("organization_id") @db.Text
+  livemode             Boolean      @default(true)
+  logoUrl              String?      @map("logo_url") @db.Text
+  color                String?      @map("color") @db.Text
+  backgroundUrl        String?      @map("background_url") @db.Text
+  modalImageUrl        String?      @map("modal_image_url") @db.Text
+  instagramPageUrl     String?      @map("instagram_page_url") @db.Text
+  postImageUrls        String[]     @map("post_image_urls")
+  websiteUrl           String?      @map("website_url") @db.Text
+  aiPromptShareMessage String?      @map("ai_prompt_share_message") @db.Text
+  createdAt            DateTime     @default(now()) @map("created_at")
+  createdBy            String       @default("system") @map("created_by") @db.Text
+  updatedAt            DateTime     @default(now()) @updatedAt @map("updated_at")
+  updatedBy            String       @default("system") @map("updated_by") @db.Text
+  tags                 Tag[]
+
+  @@map("brand_settings")
+}
+
+model Webhook {
+  id             String       @id @unique @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @map("organization_id") @db.Text
+  livemode       Boolean      @default(true)
+  url            String       @db.Text
+  description    String?      @db.Text
+  isActive       Boolean      @default(true) @map("is_active")
+  events         String[]
+  svixEndpointId String       @unique @map("svix_endpoint_id") @db.Text
+  metadata       Json?        @db.Json
+  createdAt      DateTime     @default(now()) @map("created_at")
+  createdBy      String       @default("system") @map("created_by") @db.Text
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+  updatedBy      String       @default("system") @map("updated_by") @db.Text
+
+  @@map("webhooks")
+}
+
+model Bill {
+  id             String       @id @unique @db.Text
+  billId         String       @unique @map("bill_id") @db.Text
+  stripeId       String?      @unique @map("stripe_id") @db.Text
+  livemode       Boolean      @default(true)
+  amount         Int          @db.Integer
+  amountPayout   Int          @default(0) @db.Integer
+  currency       Currency     @default(EUR)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  status         BillStatus   @default(NEW)
+  organizationId String       @map("organization_id") @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  dueDate        DateTime     @default(now()) @map("due_date")
+  createdBy      String       @default("system") @map("created_by") @db.Text
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+  updatedBy      String       @default("system") @map("updated_by") @db.Text
+
+  @@map("bills")
+}
+
+model TransactionalEmail {
+  id             String        @id @unique @db.Text
+  type           EmailType     @default(NEW_GROUP)
+  subject        String        @db.Text
+  preheaderText  String        @map("preheader_text") @db.Text
+  livemode       Boolean       @default(true)
+  locale         Locale        @default(fr_FR)
+  fromEmail      FromEmailType @default(RESEND_FROM_EMAIL_INTERNAL) @map("from_email_type")
+  isInternal     Boolean       @default(false)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String?       @map("organization_id") @db.Text
+  body           String        @db.Text
+  variables      Json          @db.Json
+  createdAt      DateTime      @default(now()) @map("created_at")
+  createdBy      String        @default("system") @map("created_by") @db.Text
+  updatedAt      DateTime      @default(now()) @updatedAt @map("updated_at")
+  updatedBy      String        @default("system") @map("updated_by") @db.Text
+
+  @@unique([organizationId, type, livemode, locale])
+  @@map("transactional_emails")
+}
+
+model Order {
+  id                   String        @id @unique @db.Text
+  livemode             Boolean       @default(true)
+  organization         Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String        @map("organization_id") @db.Text
+  amount               Int           @map("amount_total") @db.Integer
+  amountCashback       Int?          @map("amount_cashback") @db.Integer
+  applicationFeeAmount Int?          @default(0) @map("application_fee_amount") @db.Integer
+  customerEmail        String?       @map("customer_email") @db.Text
+  customerFirstName    String?       @map("customer_first_name") @db.Text
+  customerLastName     String?       @map("customer_last_name") @db.Text
+  customerPhoneNumber  String?       @map("customer_phone_number") @db.Text
+  paymentGroupShareId  String?       @map("payment_group_share_id") @db.Text
+  customer             Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId           String?       @map("customer_id") @db.Text
+  currency             Currency      @default(EUR)
+  locale               Locale        @default(fr_FR)
+  status               OrderStatus   @default(CREATED)
+  metadata             Json?         @db.Json
+  paymentGroup         PaymentGroup? @relation(fields: [paymentGroupId], references: [id], onDelete: SetNull)
+  paymentGroupId       String?       @map("payment_group_id") @db.Text
+  clientReferenceId    String?       @map("client_reference_id") @db.Text
+  token                String?       @db.Text
+  riskLevel            RiskLevel     @default(LOW) @map("risk_level")
+  createdAt            DateTime      @default(now()) @map("created_at")
+  createdBy            String        @default("system") @map("created_by") @db.Text
+  updatedAt            DateTime      @default(now()) @updatedAt @map("updated_at")
+  updatedBy            String        @default("system") @map("updated_by") @db.Text
+  ambassador           Ambassador?   @relation(fields: [ambassadorId], references: [id], onDelete: SetNull)
+  ambassadorId         String?       @map("ambassador_id") @db.Text
+
+  @@map("orders")
+}
+
+model Ambassador {
+  id             String          @id @unique @db.Text
+  email          String?         @unique @db.Text
+  phoneNumber    String          @unique @map("phone_number") @db.Text
+  referralCode   String?         @unique @map("referral_code") @db.Text
+  organizations  Organization[]
+  orders         Order[]
+  metadata       Json?           @db.Json
+  createdAt      DateTime        @default(now()) @map("created_at")
+  createdBy      String          @default("system") @map("created_by") @db.Text
+  updatedAt      DateTime        @default(now()) @updatedAt @map("updated_at")
+  updatedBy      String          @default("system") @map("updated_by") @db.Text
+  deletedAt      DateTime?       @map("deleted_at")
+  paymentIntents PaymentIntent[]
+
+  @@map("ambassadors")
+}
+
+model Tag {
+  id            String          @id @unique @db.Text
+  name          String          @unique @db.Text
+  createdAt     DateTime        @default(now()) @map("created_at")
+  createdBy     String          @default("system") @map("created_by") @db.Text
+  brandSettings BrandSettings[]
+
+  @@map("tags")
+}
+
+enum ApiKeyType {
+  PUBLIC
+  SECRET
+}
+
+enum CheckoutSessionStatus {
+  OPEN
+  COMPLETED
+  EXPIRED
+}
+
+enum Currency {
+  EUR
+}
+
+enum DayOfTheWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum DiscountType {
+  AMOUNT
+  PERCENTAGE
+}
+
+enum EmailType {
+  NEW_GROUP
+  JOIN_GROUP
+  GROUP_REMINDER
+  CASHBACK_AVAILABLE
+  CASHBACK_SENT
+  CASHBACK_WITHDRAWN
+  NEW_LEVEL_UNLOCKED
+  GROUP_EXPIRED
+  PAYOUT_CONFIRMATION
+  ONBOARDING_AMBASSADOR
+}
+
+enum FromEmailType {
+  RESEND_FROM_EMAIL_CASHBACK
+  RESEND_FROM_EMAIL_NOTIFICATIONS
+  RESEND_FROM_EMAIL_SHARE
+  RESEND_FROM_EMAIL_REMINDERS
+  RESEND_FROM_EMAIL_INTERNAL
+}
+
+enum LineItemType {
+  PRODUCT
+  GIFT_CARD
+  DISCOUNT
+  SHIPPING
+  STORE_CREDIT
+}
+
+enum Locale {
+  en_US
+  en_GB
+  fr_FR
+}
+
+enum BillStatus {
+  NEW
+  PAID
+  SENT
+  OVERDUE
+}
+
+enum OrderStatus {
+  CREATED
+  CASHBACK_AVAILABLE
+  CASHBACK_PROCESSING
+  CASHBACK_SENT
+}
+
+enum PaymentIntentStatus {
+  CANCELED
+  SUCCEEDED
+  CASHBACK_AVAILABLE
+  CASHBACK_PROCESSING
+  CASHBACK_SENT
+}
+
+enum PaymentGroupStatus {
+  OPEN
+  COMPLETED
+  CANCELED
+  EXPIRED
+}
+
+enum ReminderEmailSentStatus {
+  NOT_SENT
+  MIDWAY_SENT
+  DAY3_SENT
+  DAY2_BEFORE_END_SENT
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  HIGHEST
+}

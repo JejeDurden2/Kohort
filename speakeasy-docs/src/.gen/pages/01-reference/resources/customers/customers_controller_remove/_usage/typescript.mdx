@@ -1,0 +1,17 @@
+```typescript CustomersControllerRemove.ts
+import { SDK } from "openapi";
+import { CustomersControllerRemoveRequest } from "openapi/dist/models/operations";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+const id: string = "string";
+
+  const res = await sdk.customers.customersControllerRemove(id);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

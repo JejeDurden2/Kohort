@@ -1,0 +1,21 @@
+```typescript PaymentGroupsControllerValidate.ts
+import { SDK } from "openapi";
+import { ValidatePaymentGroupDto } from "openapi/dist/models/components";
+import { PaymentGroupsControllerValidateRequest } from "openapi/dist/models/operations";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+const id: string = "string";
+const validatePaymentGroupDto: ValidatePaymentGroupDto = {
+  customerEmail: "customer@gmail.com",
+};
+
+  const res = await sdk.paymentGroups.paymentGroupsControllerValidate(id, validatePaymentGroupDto);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

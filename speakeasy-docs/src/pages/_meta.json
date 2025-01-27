@@ -1,0 +1,25 @@
+{
+  "-- guides": {
+    "title": "Guides",
+    "type": "separator"
+  },
+  "installation": {
+    "title": "Installation"
+  },
+  "-- resources": {
+    "title": "Resources",
+    "type": "separator"
+  },
+  "payment_intents": {
+    "title": "Payment Intents"
+  },
+  "payment_groups": {
+    "title": "Payment Groups"
+  },
+  "customers": {
+    "title": "Customers"
+  },
+  "checkout_sessions_api": {
+    "title": "Checkout Sessions Api"
+  }
+}

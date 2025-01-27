@@ -1,0 +1,53 @@
+version: "2"
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - "3306:3306"
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_magento
+      - MARIADB_DATABASE=bitnami_magento
+    volumes:
+      - "mariadb_data:/bitnami/mariadb"
+  magento:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:8080"
+      - "443:8443"
+    environment:
+      - MAGENTO_HOST=localhost
+      - MAGENTO_DATABASE_HOST=mariadb
+      - MAGENTO_DATABASE_PORT_NUMBER=3306
+      - MAGENTO_DATABASE_USER=bn_magento
+      - MAGENTO_DATABASE_NAME=bitnami_magento
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT_NUMBER=9200
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MAGENTO_MODE=developer
+      - MAGENTO_PUBLIC_KEY=c502493add0360f12563071d7180ea7f
+      - MAGENTO_PRIVATE_KEY=78693a226934acd23e422d385b68fab2
+      - PORT=8080
+    volumes:
+      - "magento_data:/bitnami/magento"
+      - "./Kohortpay:/bitnami/magento/app/code/Kohortpay"
+    depends_on:
+      - mariadb
+      - elasticsearch
+  elasticsearch:
+    image: docker.io/bitnami/elasticsearch:7
+    volumes:
+      - "elasticsearch_data:/bitnami/elasticsearch/data"
+volumes:
+  mariadb_data:
+    driver: local
+  magento_data:
+    driver: local
+  elasticsearch_data:
+    driver: local

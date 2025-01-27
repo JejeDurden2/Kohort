@@ -1,0 +1,29 @@
+
+import WithStatusBar from '@/src/components/WithStatusBar';
+
+<WithStatusBar statusItems={[["Status", "401"], ["Content-Type", "application/json"]]}>
+  <CH.Code>
+  ```typescript CheckoutSessionsControllerExpire.ts
+  import { SDK } from "openapi";
+import { CheckoutSessionsControllerExpireRequest } from "openapi/dist/models/operations";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+const id: string = "string";
+
+  const res = await sdk.checkoutSessionsAPI.checkoutSessionsControllerExpire(id);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+  ```
+  ---
+
+  ```json Example Response
+  {}
+  ```
+  </CH.Code>
+</WithStatusBar>

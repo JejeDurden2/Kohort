@@ -1,0 +1,57 @@
+name: Cypress Test Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Env to run Cypress tests in'
+        required: true
+        default: 'staging'
+
+jobs:
+  cypress-run:
+    name: Cypress run
+    runs-on: ubuntu-22.04
+    environment: CI Env
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 8.6.1
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.10.0
+          cache: 'pnpm'
+
+      - name: Check environment variables
+        run: |
+          printenv
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          record: true
+        env:
+          # pass GitHub token to detect new build vs re-run build
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_ENV: ${{ github.event.inputs.env }}
+          STAGING_SECRET_KEY: ${{secrets.STAGING_SECRET_KEY}}
+          PROD_SECRET_KEY: ${{secrets.PROD_SECRET_KEY}}
+          STAGING_API_URL: ${{secrets.STAGING_API_URL}}
+          PROD_API_URL: ${{secrets.PROD_API_URL}}
+          STAGING_DASHBOARD_URL: ${{secrets.STAGING_DASHBOARD_URL}}
+          PROD_DASHBOARD_URL: ${{secrets.PROD_DASHBOARD_URL}}
+          STAGING_CHECKOUT_URL: ${{secrets.STAGING_CHECKOUT_URL}}
+          PROD_CHECKOUT_URL: ${{secrets.PROD_CHECKOUT_URL}}
+          STAGING_MY_URL: ${{secrets.STAGING_MY_URL}}
+          PROD_MY_URL: ${{secrets.PROD_MY_URL}}
+          CYPRESS_TEST_EMAIL: ${{secrets.CYPRESS_TEST_EMAIL}}
+          CYPRESS_TEST_PASSWORD: ${{secrets.CYPRESS_TEST_PASSWORD}}
+          CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_RECORD_KEY}}

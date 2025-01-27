@@ -1,0 +1,25 @@
+{
+    "name": "kohortpay/module-payment",
+    "description": "Official KohortPay Magento 2 module",
+    "type": "magento2-module",
+    "license": "MIT",
+    "authors":[
+        {
+            "name":"Kohortpay",
+            "email":"support@kohortpay.com"
+        }
+    ],
+    "require": {
+        "magento/module-payment": "100.1.*",
+        "magento/module-checkout": "100.1.*",
+        "magento/module-sales": "100.1.*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Kohortpay\\Payment\\": ""
+        }
+    }
+}

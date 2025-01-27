@@ -1,0 +1,17 @@
+{
+  "customers_controller_find_all": {
+    "title": "Customers Controller Find All"
+  },
+  "customers_controller_create": {
+    "title": "Customers Controller Create"
+  },
+  "customers_controller_remove": {
+    "title": "Customers Controller Remove"
+  },
+  "customers_controller_find_one": {
+    "title": "Customers Controller Find One"
+  },
+  "customers_controller_update": {
+    "title": "Customers Controller Update"
+  }
+}

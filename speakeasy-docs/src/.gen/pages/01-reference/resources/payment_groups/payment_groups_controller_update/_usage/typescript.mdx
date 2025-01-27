@@ -1,0 +1,21 @@
+```typescript PaymentGroupsControllerUpdate.ts
+import { SDK } from "openapi";
+import { UpdatePaymentGroupDto, UpdatePaymentGroupDtoMetadata } from "openapi/dist/models/components";
+import { PaymentGroupsControllerUpdateRequest } from "openapi/dist/models/operations";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+const id: string = "string";
+const updatePaymentGroupDto: UpdatePaymentGroupDto = {
+  metadata: {},
+};
+
+  const res = await sdk.paymentGroups.paymentGroupsControllerUpdate(id, updatePaymentGroupDto);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

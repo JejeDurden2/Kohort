@@ -1,0 +1,15 @@
+name: Cypress e2e tests
+on: [deployment]
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.deployment.environment }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Run Cypress tests
+        run: npm run cypress:run
+        env:
+          GB_AUTH_TOKEN: ${{ vars.GB_AUTH_TOKEN }}
+          NODE_ENV: ${{ vars.NODE_ENV }}

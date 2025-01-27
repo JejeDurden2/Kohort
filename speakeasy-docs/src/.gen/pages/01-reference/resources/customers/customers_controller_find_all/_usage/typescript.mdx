@@ -1,0 +1,15 @@
+```typescript CustomersControllerFindAll.ts
+import { SDK } from "openapi";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+
+  const res = await sdk.customers.customersControllerFindAll();
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

@@ -1,0 +1,54 @@
+
+import WithStatusBar from '@/src/components/WithStatusBar';
+
+<WithStatusBar statusItems={[["Status", "400"], ["Content-Type", "application/json"]]}>
+  <CH.Code>
+  ```typescript CheckoutSessionsControllerCreate.ts
+  import { SDK } from "openapi";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+
+  const res = await sdk.checkoutSessionsAPI.checkoutSessionsControllerCreate({
+    successUrl: "https://success.example.com",
+    cancelUrl: "https://cancel.example.com",
+    customerEmail: "customer@example.com",
+    customerFirstName: "John",
+    customerLastName: "Doe",
+    customerId: "user_xxxxxxxxxxxxxxxx",
+    expiresAt: new Date("2023-10-02T14:30:00.000Z"),
+    lineItems: [
+      {
+        name: "Item Name",
+        price: 100,
+        quantity: 1,
+        imageUrl: "https://example.com/image.jpg",
+        description: "Item Description",
+        type: "PRODUCT",
+      },
+    ],
+    metadata: {},
+    amountTotal: 35000,
+    locale: "en-US",
+  });
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+  ```
+  ---
+
+  ```json Example Response
+  {
+    "error": {
+      "type": "invalid_request_error",
+      "message": "Invalid input value.",
+      "code": "Unauthorized"
+    }
+  }
+  ```
+  </CH.Code>
+</WithStatusBar>

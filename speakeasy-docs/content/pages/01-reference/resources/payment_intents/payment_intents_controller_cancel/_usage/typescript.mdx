@@ -1,0 +1,18 @@
+```typescript PaymentIntentsControllerCancel.ts
+import { SDK } from "openapi";
+import { PaymentIntentsControllerCancelRequest, PaymentIntentsControllerCancelSecurity } from "openapi/dist/models/operations";
+
+(async() => {
+  const sdk = new SDK();
+const id: string = "string";
+const operationSecurity: PaymentIntentsControllerCancelSecurity = {
+  bearer: "",
+};
+
+  const res = await sdk.paymentIntents.paymentIntentsControllerCancel(operationSecurity, id);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

@@ -1,0 +1,2 @@
+web: pnpm run start:prod
+release: pnpm run migrate:deploy && pnpm run cypress

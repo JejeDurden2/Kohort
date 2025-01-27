@@ -1,0 +1,14 @@
+{
+  "payment_intents_controller_find_all": {
+    "title": "Payment Intents Controller Find All"
+  },
+  "payment_intents_controller_create": {
+    "title": "Payment Intents Controller Create"
+  },
+  "payment_intents_controller_find_one": {
+    "title": "Payment Intents Controller Find One"
+  },
+  "payment_intents_controller_cancel": {
+    "title": "Payment Intents Controller Cancel"
+  }
+}

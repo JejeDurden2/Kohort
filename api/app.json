@@ -1,0 +1,14 @@
+{
+  "addons": ["heroku-postgresql:hobby-basic"],
+  "scripts": {
+    "postdeploy": "pnpm run db:dump"
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/unfold/heroku-buildpack-pnpm"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-cli"
+    }
+  ]
+}

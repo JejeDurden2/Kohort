@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Clerk CSS override */
+
+button:focus, a:focus, input:focus, button:focus-visible, a:focus-visible, input:focus-visible {
+    box-shadow: none !important;
+    outline: none;
+}
+
+.cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonIcon, .cl-userButtonPopoverActionButton:hover .cl-userButtonPopoverActionButtonText {
+    color: theme(colors.brand.100);
+}
+
+.cl-organizationSwitcherPopoverActionButton:hover .cl-organizationSwitcherPopoverActionButtonIcon, .cl-organizationSwitcherPopoverActionButton:hover .cl-organizationSwitcherPopoverActionButtonText {
+    color: theme(colors.brand.100);
+}
+
+.cl-navbarButton.cl-active {
+    color: theme(colors.brand.100);
+}
+
+.cl-organizationSwitcherTrigger .cl-organizationPreviewMainIdentifier, .cl-organizationPreview .cl-organizationPreviewMainIdentifier {
+    font-size: theme(fontSize.lg);
+}
+
+.cl-organizationSwitcherPopoverActions .cl-organizationPreview .cl-organizationPreviewMainIdentifier {
+    font-size: theme(fontSize.sm);
+}

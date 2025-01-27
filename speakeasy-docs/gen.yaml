@@ -1,0 +1,42 @@
+configVersion: 1.0.0
+generation:
+  comments: {}
+  sdkClassName: SDK
+  maintainOpenAPIOrder: true
+  usageSnippets:
+    optionalPropertyRendering: withExample
+features:
+  docs:
+    core: 1.10.1
+    globalSecurity: 0.1.0
+    globalServerURLs: 0.1.1
+    methodSecurity: 0.2.0
+docs:
+  version: ""
+  imports:
+    option: openapi
+    paths:
+      callbacks: callbacks
+      errors: errors
+      operations: operations
+      shared: shared
+      webhooks: webhooks
+  inputModelSuffix: input
+  outputModelSuffix: output
+typescript:
+  version: 0.0.1
+  author: Speakeasy
+  clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: true
+  imports:
+    option: openapi
+    paths:
+      callbacks: models/callbacks
+      errors: models/errors
+      operations: models/operations
+      shared: models/components
+      webhooks: models/webhooks
+  inputModelSuffix: input
+  maxMethodParams: 4
+  outputModelSuffix: output
+  packageName: openapi

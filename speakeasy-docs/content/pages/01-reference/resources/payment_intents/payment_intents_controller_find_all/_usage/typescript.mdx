@@ -1,0 +1,15 @@
+```typescript PaymentIntentsControllerFindAll.ts
+import { SDK } from "openapi";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+
+  const res = await sdk.paymentIntents.paymentIntentsControllerFindAll();
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

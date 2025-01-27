@@ -1,0 +1,21 @@
+```typescript CustomersControllerUpdate.ts
+import { SDK } from "openapi";
+import { UpdateCustomerDto } from "openapi/dist/models/components";
+import { CustomersControllerUpdateRequest } from "openapi/dist/models/operations";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+const id: string = "string";
+const updateCustomerDto: UpdateCustomerDto = {
+  deletedAt: new Date("2021-07-22T00:00:00.000Z"),
+};
+
+  const res = await sdk.customers.customersControllerUpdate(id, updateCustomerDto);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

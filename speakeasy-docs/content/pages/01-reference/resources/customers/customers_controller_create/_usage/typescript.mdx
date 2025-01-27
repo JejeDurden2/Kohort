@@ -1,0 +1,37 @@
+```typescript CustomersControllerCreate.ts
+import { SDK } from "openapi";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+
+  const res = await sdk.customers.customersControllerCreate({
+    emailAddress: "user@example.com",
+    firstName: "John",
+    lastName: "Doe",
+    phoneNumber: "+1 555 555 5555",
+    address: {
+      addressLine1: " Avenue des Champs-Élysées",
+      addressLine2: "Appartement 4B",
+      city: "Paris",
+      postalCode: "75014",
+      country: "France",
+      state: "Île-de-France",
+    },
+    shippingAddress: {
+      addressLine1: " Avenue des Champs-Élysées",
+      addressLine2: "Appartement 4B",
+      city: "Paris",
+      postalCode: "75014",
+      country: "France",
+      state: "Île-de-France",
+    },
+    metadata: {},
+  });
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

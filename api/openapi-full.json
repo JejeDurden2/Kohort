@@ -1,0 +1,1713 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/organizations/{id}": {
+      "get": {
+        "operationId": "OrganizationsController_findOne",
+        "summary": "Retrieve an organization by ID or Clerk ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID or Clerk ID of the organization.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "The organization has been retrieved." },
+          "404": {
+            "description": "Organization not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "OrganizationsController_update",
+        "summary": "Update the details of a specified organization.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the organization.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateOrganizationDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Organization updated successfully." },
+          "400": { "description": "Invalid input data." },
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "404": { "description": "Organization not found." }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{id}/payment-group-settings": {
+      "get": {
+        "operationId": "OrganizationsController_findPaymentGroupSettings",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "OrganizationsController_updatePaymentGroupSettings",
+        "summary": "Update an organization by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the organization.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePaymentGroupSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "The organization has been updated." },
+          "400": {
+            "description": "Invalid input data.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BadRequestResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{id}/checkout-settings": {
+      "get": {
+        "operationId": "OrganizationsController_findCheckoutSettings",
+        "summary": "Retrieve checkout settings for a specified organization ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the organization.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Checkout settings retrieved successfully." },
+          "404": {
+            "description": "Organization or checkout settings not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "OrganizationsController_updateCheckoutSettings",
+        "summary": "Update checkout settings for a specified organization ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the organization.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCheckoutSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Checkout settings updated successfully." },
+          "400": { "description": "Invalid input data." },
+          "404": {
+            "description": "Organization or checkout settings not found."
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/i/organization/{id}": {
+      "get": {
+        "operationId": "InternalOrganizationsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/api-keys": {
+      "post": {
+        "operationId": "ApiKeysController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateApiKeyDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } }
+      },
+      "get": {
+        "operationId": "ApiKeysController_findAll",
+        "parameters": [],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/api-keys/{id}": {
+      "get": {
+        "operationId": "ApiKeysController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      },
+      "patch": {
+        "operationId": "ApiKeysController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateApiKeyDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } }
+      },
+      "delete": {
+        "operationId": "ApiKeysController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/api-keys/{id}/roll": {
+      "post": {
+        "operationId": "ApiKeysController_roll",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/stripe/webhook": {
+      "post": {
+        "operationId": "StripeWebhookController_handleWebhook",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/payment-intents": {
+      "post": {
+        "operationId": "PaymentIntentsController_create",
+        "summary": "Create payment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentIntentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The Payment Intent has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePaymentIntentDto"
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid input data." }
+        },
+        "tags": ["PaymentIntents"],
+        "security": [{ "bearer": [] }]
+      },
+      "get": {
+        "operationId": "PaymentIntentsController_findAll",
+        "summary": "List payments",
+        "parameters": [],
+        "responses": { "200": { "description": "List of Payment Intents." } },
+        "tags": ["PaymentIntents"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-intents/{id}": {
+      "get": {
+        "operationId": "PaymentIntentsController_findOne",
+        "summary": "Retrieve payment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the Payment Intent to fetch",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Details of the specified Payment Intent." },
+          "400": { "description": "Invalid ID supplied." }
+        },
+        "tags": ["PaymentIntents"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-intents/{id}/cancel": {
+      "post": {
+        "operationId": "PaymentIntentsController_cancel",
+        "summary": "Cancel payment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the Payment Intent to cancel",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specified Payment Intent has been canceled."
+          },
+          "400": { "description": "Invalid ID supplied." }
+        },
+        "tags": ["PaymentIntents"],
+        "security": [{ "bearer": [] }, { "bearer": [] }]
+      }
+    },
+    "/payment-groups": {
+      "post": {
+        "operationId": "PaymentGroupsController_create",
+        "summary": "Create payment group",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreatePaymentGroupDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The payment group has been successfully created."
+          },
+          "400": {
+            "description": "Invalid input, unable to create the payment group."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      },
+      "get": {
+        "operationId": "PaymentGroupsController_findAll",
+        "summary": "List payment groups",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "Successfully retrieved the payment groups." }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-groups/{id}": {
+      "get": {
+        "operationId": "PaymentGroupsController_findOne",
+        "summary": "Retrieve payment group",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved the payment group." },
+          "404": {
+            "description": "No payment group found for the provided id."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "PaymentGroupsController_update",
+        "summary": "Update payment group",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdatePaymentGroupDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Successfully updated the payment group." },
+          "400": {
+            "description": "Invalid input, unable to update the payment group."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-groups/{id}/participants": {
+      "get": {
+        "operationId": "PaymentGroupsController_participants",
+        "summary": "Retrieve participants",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved the participants." },
+          "404": {
+            "description": "No participants found for the provided payment group id."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-groups/{id}/cancel": {
+      "post": {
+        "operationId": "PaymentGroupsController_cancel",
+        "summary": "Cancel payment group",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successfully canceled the payment group." },
+          "400": {
+            "description": "Invalid request, unable to cancel the payment group."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-groups/{id}/expire": {
+      "post": {
+        "operationId": "PaymentGroupsController_expire",
+        "summary": "Expire payment group",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successfully expired the payment group." },
+          "400": {
+            "description": "Invalid request, unable to expire the payment group."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/payment-groups/{id}/validate": {
+      "post": {
+        "operationId": "PaymentGroupsController_validate",
+        "summary": "Validate payment group",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidatePaymentGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Successfully validated the payment group." },
+          "400": {
+            "description": "Invalid input, unable to validate the payment group."
+          }
+        },
+        "tags": ["Payment Groups"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/customers": {
+      "post": {
+        "operationId": "create",
+        "summary": "Create customer",
+        "description": "Create customer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateCustomerDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Customer has been successfully created." },
+          "400": { "description": "Bad Request." }
+        },
+        "tags": ["Customers"],
+        "security": [{ "bearer": [] }]
+      },
+      "get": {
+        "operationId": "findAllByOrganization",
+        "summary": "List customers",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "List of customers." },
+          "400": { "description": "Bad Request." }
+        },
+        "tags": ["Customers"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "operationId": "findAllByOrganization",
+        "summary": "List customers",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Customer details." },
+          "400": { "description": "Bad Request." }
+        },
+        "tags": ["Customers"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "CustomersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateCustomerDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Customer has been successfully updated." },
+          "400": { "description": "Bad Request." }
+        },
+        "tags": ["Customers"],
+        "security": [{ "bearer": [] }]
+      },
+      "delete": {
+        "operationId": "CustomersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Customer has been successfully deleted." },
+          "400": { "description": "Bad Request." }
+        },
+        "tags": ["Customers"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/checkout-sessions": {
+      "post": {
+        "operationId": "create",
+        "summary": "Create session",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCheckoutSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The checkout session has been successfully created."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BadRequestResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotFoundException" }
+              }
+            }
+          }
+        },
+        "tags": ["CheckoutSessionsAPI"],
+        "security": [{ "bearer": [] }]
+      },
+      "get": {
+        "operationId": "findAll",
+        "summary": "List sessions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A list of checkout sessions has been retrieved."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BadRequestResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found Endpoint",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        },
+        "tags": ["CheckoutSessionsAPI"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/checkout-sessions/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "summary": "Retrieve session",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the checkout session to retrieve.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "The checkout session has been retrieved." },
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Checkout session not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NotFoundException" }
+              }
+            }
+          }
+        },
+        "tags": ["CheckoutSessionsAPI"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/checkout-sessions/{id}/expire": {
+      "patch": {
+        "operationId": "expire",
+        "summary": "Expire a checkout session by ID for the current organization and livemode.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the checkout session to expire.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "The checkout session has been expired." },
+          "401": {
+            "description": "API key is not Valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Checkout session not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BadRequestResponse" }
+              }
+            }
+          }
+        },
+        "tags": ["CheckoutSessionsAPI"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/webhooks/clerk/create-user": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkCreateUser",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/update-user": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkUpdateUser",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/delete-user": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkDeleteUser",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/create-organization": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkCreateOrganization",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/update-organization": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkUpdateOrganization",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/delete-organization": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkDeleteOrganization",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/session-created": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkSessionCreated",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/create-invitation": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkCreateInvitation",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/update-invitation": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkUpdateInvitation",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/create-organization-membership": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkCreateOrganizationMembership",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/update-organization-membership": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkUpdateOrganizationMembership",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/clerk/delete-organization-membership": {
+      "post": {
+        "operationId": "ClerkWebhooksController_clerkDeleteOrganizationMembership",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/stripe": {
+      "post": {
+        "operationId": "StripeWebhooksController_stripe",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/stripe/test-mode": {
+      "post": {
+        "operationId": "StripeWebhooksController_stripeTestMode",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/stripe/connect": {
+      "post": {
+        "operationId": "StripeWebhooksController_stripeConnect",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks": {
+      "post": {
+        "operationId": "WebhooksController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateWebhookDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } }
+      },
+      "get": {
+        "operationId": "WebhooksController_findAll",
+        "parameters": [],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/webhooks/{id}": {
+      "get": {
+        "operationId": "WebhooksController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      },
+      "patch": {
+        "operationId": "WebhooksController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateWebhookDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } }
+      },
+      "delete": {
+        "operationId": "WebhooksController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/webhooks/{id}/secret": {
+      "get": {
+        "operationId": "WebhooksController_getSecret",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/webhooks/{id}/roll": {
+      "post": {
+        "operationId": "WebhooksController_rollSecret",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/{id}/stats": {
+      "get": {
+        "operationId": "WebhooksController_getStats",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/webhooks/{id}/messages/{messageId}/retry": {
+      "post": {
+        "operationId": "WebhooksController_retry",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "messageId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/webhooks/{id}/messages/{filter}": {
+      "get": {
+        "operationId": "WebhooksController_findAllMessages",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "filter",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/webhooks/messages/{messageId}": {
+      "get": {
+        "operationId": "WebhooksController_getMessage",
+        "parameters": [
+          {
+            "name": "messageId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/payment-group-settings/{id}": {
+      "get": {
+        "operationId": "PaymentGroupSettingsController_findOne",
+        "summary": "Retrieve payment group settings by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment group settings have been retrieved."
+          },
+          "400": {
+            "description": "Invalid input.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BadRequestResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Payment group settings not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        },
+        "tags": ["PaymentGroupSettingsAPI"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "PaymentGroupSettingsController_update",
+        "summary": "Update payment group settings by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePaymentGroupSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The payment group settings have been updated."
+          },
+          "400": {
+            "description": "Invalid input.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BadRequestResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Payment group settings not found.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        },
+        "tags": ["PaymentGroupSettingsAPI"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/getstream/{feedName}/{feedId}": {
+      "get": {
+        "operationId": "GetStreamController_getFeed",
+        "parameters": [
+          {
+            "name": "feedName",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "feedId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } }
+      }
+    }
+  },
+  "info": {
+    "title": "kohortPay",
+    "description": "The KohortPay API is organized around [REST](https://). Our API has predictable resource-oriented URLs, accepts application/json or [form-encoded](https://) request bodies, returns [JSON-encoded](https://) responses, and uses standard HTTP response codes, authentication, and verbs.\n\nYou can use the KohortPay API in test mode, which doesn't affect your live data or interact with the banking networks. The API key you use to authenticate the request determines whether the request is live mode or test mode.\n\n# Authentification\n\nThe KohortPay API uses API keys to authenticate requests. You can view and manage your API keys in the KohortPay Dashboard.\n\nTest mode secret keys have the prefix `sk_test_` and live mode secret keys have the prefix `sk_live_`. Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.\n\nAuthentication to the API is performed via [HTTP Basic Auth](https://). Provide your API key as the basic auth username value. You do not need to provide a password. You can also provide your key as a Bearer token.\n\nAll API requests must be made over [HTTPS](https://). Calls made over plain HTTP will fail. API requests without authentication will also fail.\n\n# Errors\n\nKohortPay uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, a charge failed, etc.). Codes in the `5xx` range indicate an error with Kohort's servers (these are rare).\n\nSome `4xx` errors that could be handled programmatically (e.g., a card is [declined](https://)) include an [error code](https://) that briefly explains the error reported.\n\n##### Attributes\n\n- type _string_  \n   The type of error returned. One of `api_error` or `invalid_request_error.`\n- message _string_  \n   A human-readable message providing more details about the error.\n\n# Expanding Responses\n\nMany objects allow you to request additional information as an expanded response by using the `expand` request parameter. This parameter is available on all API requests, and applies to the response of that request only.\n\nIn many cases, an object contains the ID of a related object in its response properties. For example, a `Customer` may have an associated `Organization` ID. Those objects can be expanded inline with the `expand` request parameter.\n\nYou can use the `expand` param on any list endpoint which returns expandable fields.\n\nYou can expand multiple objects at once by identifying multiple items in the `expand` array.\n\nBe aware that using expand will make your queries slower.\n\n# Pagination\n\nAll top-level API resources have support for bulk fetches via \"list\" API methods. These list API methods share a common structure, taking at least these three parameters: `take`, `skip`, and `orderBy`.\n\nThe response of a list API method represents a single page in a reverse chronological stream of objects. If you do not specify any parameters, you will receive the first page of this stream, containing the newest objects. The limit of objects you can receive is set to 100.\n\nAlong with the data, you will receive `count`to allow you to paginate accordingly.\n\n##### Parameters\n\n- take _number optional_  \n   A limit on the number of objects to be returned, must be a positive int. Max 100.\n- skip _number optional_  \n   The number of objects to skip.\n- orderBy _string optional default=createdAt:desc_  \n   Object field to sort. Format is `field:asc|desc`. If none of `asc`or `desc` is provided, it will default to `asc`.\n\n# Search\n\nAll top-level API resources have support for search via \"list\" API methods. It allows you to filter your lists on any property of your object.\n\nThe search can be used alongside _Pagination_ query parameters (see above) and the response will follow the same pattern.\n\n##### Parameters\n\n- search _string optional_  \n   The property and value you want to filter on, separated by `:`. Format is `property:value`. `property` must match an existing property of the object. `value` must exactly match an existing value (case-sensitive). Example: `/customers?search=first_name:Bob` will retrieve all customers with the first name Bob.\n",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    { "url": "https://api.kohortpay.dev", "description": "staging" },
+    { "url": "http://localhost:3000/", "description": "Development" },
+    { "url": "https://api.kohortpay.com", "description": "Production" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" },
+      "basic": { "type": "http", "scheme": "basic" }
+    },
+    "schemas": {
+      "Error": { "type": "object", "properties": {} },
+      "CreateAddressDto": {
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "type": "string",
+            "description": "The first line of the address.",
+            "example": " Avenue des Champs-Élysées"
+          },
+          "addressLine2": {
+            "type": "string",
+            "description": "The second line of the address (optional).",
+            "example": "Appartement 4B",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "description": "The city of the address.",
+            "example": "Paris"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "The postal code of the address.",
+            "example": "75014"
+          },
+          "country": {
+            "type": "string",
+            "description": "The country of the address.",
+            "example": "France"
+          },
+          "state": {
+            "type": "string",
+            "description": "The state of the address (optional).",
+            "example": "Île-de-France",
+            "nullable": true
+          }
+        },
+        "required": ["addressLine1", "city", "postalCode", "country"]
+      },
+      "UpdateOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "deletedAt": {
+            "type": "string",
+            "description": "The date the organization was deleted at.",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2023-10-10T10:10:10Z"
+          },
+          "stripeId": {
+            "type": "string",
+            "description": "The unique identifier of the organization on Stripe.",
+            "nullable": true,
+            "example": "acct_1O2r5TPxIlOiYk2r"
+          },
+          "address": {
+            "description": "The address of the organization.",
+            "nullable": true,
+            "allOf": [{ "$ref": "#/components/schemas/CreateAddressDto" }]
+          },
+          "payoutInterval": {
+            "type": "string",
+            "description": "The interval at which payouts are made.",
+            "enum": ["WEEKLY", "MONTHLY"],
+            "example": "WEEKLY"
+          },
+          "payoutAnchorWeekly": {
+            "type": "string",
+            "description": "The day of the week on which payouts are anchored.",
+            "enum": [
+              "MONDAY",
+              "TUESDAY",
+              "WEDNESDAY",
+              "THURSDAY",
+              "FRIDAY",
+              "SATURDAY",
+              "SUNDAY"
+            ],
+            "nullable": true,
+            "example": "MONDAY"
+          },
+          "payoutAnchorMonthly": {
+            "type": "number",
+            "description": "The day of the month on which payouts are anchored.",
+            "nullable": true,
+            "minimum": 1,
+            "maximum": 31,
+            "example": 15
+          },
+          "stripeDashboardUrl": {
+            "type": "string",
+            "description": "URL to the organization's Stripe Dashboard.",
+            "format": "uri",
+            "nullable": true,
+            "example": "https://dashboard.stripe.com/test/dashboard"
+          }
+        }
+      },
+      "UnauthorizedException": { "type": "object", "properties": {} },
+      "CreateDiscountLevelDto": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number",
+            "description": "The level of discount.",
+            "example": 1
+          },
+          "value": {
+            "type": "number",
+            "description": "The value of discount.",
+            "example": 10.5
+          },
+          "participantsToUnlock": {
+            "type": "number",
+            "description": "The number of participants required to unlock this discount level.",
+            "example": 3
+          }
+        },
+        "required": ["level", "value", "participantsToUnlock"]
+      },
+      "UpdatePaymentGroupSettingsDto": {
+        "type": "object",
+        "properties": {
+          "discountType": {
+            "type": "string",
+            "description": "The type of discount.",
+            "enum": ["AMOUNT", "PERCENTAGE"],
+            "example": "PERCENTAGE"
+          },
+          "discountLevels": {
+            "description": "An array of discount levels.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CreateDiscountLevelDto" }
+          },
+          "maxParticipants": {
+            "type": "number",
+            "description": "Maximum number of participants.",
+            "minimum": 2,
+            "maximum": 1000,
+            "example": 10
+          },
+          "minutesDuration": {
+            "type": "number",
+            "description": "Duration in minutes.",
+            "minimum": 1,
+            "maximum": 10080,
+            "example": 60
+          },
+          "minPurchaseValue": {
+            "type": "number",
+            "description": "Minimum purchase value.",
+            "minimum": 3000,
+            "example": 100
+          }
+        }
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of the error.",
+            "example": "invalid_request_error"
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message.",
+            "example": "Invalid input value."
+          },
+          "code": {
+            "type": "string",
+            "description": "Specific error code.",
+            "example": "Unauthorized"
+          }
+        },
+        "required": ["type", "message", "code"]
+      },
+      "BadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Details of the error.",
+            "allOf": [{ "$ref": "#/components/schemas/ErrorDetail" }]
+          }
+        },
+        "required": ["error"]
+      },
+      "UpdateCheckoutSettingsDto": {
+        "type": "object",
+        "properties": {
+          "successUrl": {
+            "type": "string",
+            "description": "URL to navigate to on successful payment.",
+            "example": "https://success.example.com",
+            "format": "uri",
+            "nullable": true
+          },
+          "cancelUrl": {
+            "type": "string",
+            "description": "URL to navigate to on cancelled payment.",
+            "example": "https://cancel.example.com",
+            "format": "uri",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "description": "The locale of the checkout session.",
+            "example": "FR-fr"
+          },
+          "logoUrl": {
+            "type": "string",
+            "description": "The URL of the brand logo.",
+            "example": "https://example.com/logo.png",
+            "format": "uri",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "description": "The Color of the brand image.",
+            "example": "#FAFAFA",
+            "format": "uri",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "The status of the checkout settings.",
+            "example": true
+          }
+        }
+      },
+      "CreateApiKeyDto": { "type": "object", "properties": {} },
+      "UpdateApiKeyDto": { "type": "object", "properties": {} },
+      "CreatePaymentIntentDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The amount to be charged.",
+            "example": 5000
+          },
+          "checkoutSessionId": {
+            "type": "string",
+            "description": "Checkout Session id of the payment intent",
+            "example": "cs_1abc2def3ghi"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "Customer id of the payment intent",
+            "example": "cus_1abc2def3ghi",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the payment group.",
+            "example": { "order_id": "ord_1JYLo8KerLxWZaQtys6ZQ1xS" }
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the payment intent",
+            "enum": [
+              "CANCELED",
+              "PROCESSING",
+              "REQUIRES_PAYMENT_METHOD",
+              "REQUIRES_CONFIRMATION",
+              "REQUIRES_ACTION",
+              "REQUIRES_CAPTURE",
+              "SUCCEEDED"
+            ],
+            "example": "REQUIRES_PAYMENT_METHOD"
+          }
+        },
+        "required": ["amount", "checkoutSessionId"]
+      },
+      "CreatePaymentGroupDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The ID of the customer.",
+            "example": "cus_IzkjlvAhdjzjht3"
+          },
+          "paymentIntentId": {
+            "type": "string",
+            "description": "The ID of the payment intent.",
+            "example": "pi_1JYLo8KerLxWZaQtys6ZQ1xR"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the payment group.",
+            "example": { "order_id": "ord_1JYLo8KerLxWZaQtys6ZQ1xS" }
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The expiration date and time of the payment group.",
+            "example": "2023-11-30T14:24:01.171Z"
+          }
+        },
+        "required": ["customerId", "paymentIntentId"]
+      },
+      "UpdatePaymentGroupDto": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the payment group update.",
+            "example": { "order_id": "ord_1JYLo8KerLxWZaQtys6ZQ1xT" }
+          }
+        },
+        "required": ["metadata"]
+      },
+      "ValidatePaymentGroupDto": {
+        "type": "object",
+        "properties": {
+          "customerEmail": {
+            "type": "string",
+            "description": "The email address of the customer.",
+            "example": "customer@gmail.com"
+          }
+        },
+        "required": ["customerEmail"]
+      },
+      "CreateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string",
+            "description": "The primary email address of the user.",
+            "example": "user@example.com"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "The first name of the customer.",
+            "example": "John",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "description": "The last name of the customer.",
+            "nullable": true,
+            "example": "Doe"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "The phone number of the customer.",
+            "nullable": true,
+            "example": "+1 555 555 5555"
+          },
+          "address": {
+            "description": "The address of the customer.",
+            "allOf": [{ "$ref": "#/components/schemas/CreateAddressDto" }]
+          },
+          "shippingAddress": {
+            "description": "The shipping address of the customer.",
+            "allOf": [{ "$ref": "#/components/schemas/CreateAddressDto" }]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the  customer.",
+            "example": { "order_id": "ord_1JYLo8KerLxWZaQtys6ZQ1xS" }
+          }
+        },
+        "required": ["emailAddress"]
+      },
+      "UpdateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2021-07-22T00:00:00.000Z"
+          }
+        }
+      },
+      "CreateLineItemDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the item.",
+            "example": "Item Name"
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the item.",
+            "example": 100
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity of the item.",
+            "example": 1
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "The URL of the item image.",
+            "example": "https://example.com/image.jpg",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the item.",
+            "example": "Item Description",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the item.",
+            "example": "PRODUCT"
+          }
+        },
+        "required": ["name", "price", "quantity", "type"]
+      },
+      "CreateCheckoutSessionDto": {
+        "type": "object",
+        "properties": {
+          "successUrl": {
+            "type": "string",
+            "description": "The URL to redirect the user to upon successful payment.",
+            "example": "https://success.example.com"
+          },
+          "cancelUrl": {
+            "type": "string",
+            "description": "The URL to redirect the user to upon cancellation of payment.",
+            "example": "https://cancel.example.com"
+          },
+          "customerEmail": {
+            "type": "string",
+            "description": "The email of the customer.",
+            "example": "customer@example.com"
+          },
+          "customerFirstName": {
+            "type": "string",
+            "description": "The firstName of the customer.",
+            "example": "John"
+          },
+          "customerLastName": {
+            "type": "string",
+            "description": "The lastName of the customer.",
+            "example": "Doe"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "The unique id of the customer",
+            "example": "user_xxxxxxxxxxxxxxxx"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The expiration date of the checkout session.",
+            "example": "2023-10-02T14:30:00.000Z"
+          },
+          "lineItems": {
+            "description": "List of items in the checkout session.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CreateLineItemDto" }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the checkout session.",
+            "example": { "order_id": "ord_1JYLo8KerLxWZaQtys6ZQ1xS" }
+          },
+          "amountTotal": {
+            "type": "number",
+            "description": "The total amount of the checkout session",
+            "example": 35000
+          },
+          "locale": {
+            "type": "string",
+            "description": "The locale of the checkout session. default: fr_FR",
+            "example": "en-US"
+          }
+        },
+        "required": ["lineItems", "amountTotal", "locale"]
+      },
+      "NotFoundException": { "type": "object", "properties": {} },
+      "CreateWebhookDto": { "type": "object", "properties": {} },
+      "UpdateWebhookDto": { "type": "object", "properties": {} }
+    }
+  }
+}

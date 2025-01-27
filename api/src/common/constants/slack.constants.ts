@@ -1,0 +1,2 @@
+export const MARTIN_USER_ID = 'U05A3A0R9DH'
+export const AYMERIC_USER_ID = 'U05AG2KF69F'

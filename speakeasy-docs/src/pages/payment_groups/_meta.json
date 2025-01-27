@@ -1,0 +1,26 @@
+{
+  "payment_groups_controller_find_all": {
+    "title": "Payment Groups Controller Find All"
+  },
+  "payment_groups_controller_create": {
+    "title": "Payment Groups Controller Create"
+  },
+  "payment_groups_controller_find_one": {
+    "title": "Payment Groups Controller Find One"
+  },
+  "payment_groups_controller_update": {
+    "title": "Payment Groups Controller Update"
+  },
+  "payment_groups_controller_participants": {
+    "title": "Payment Groups Controller Participants"
+  },
+  "payment_groups_controller_cancel": {
+    "title": "Payment Groups Controller Cancel"
+  },
+  "payment_groups_controller_expire": {
+    "title": "Payment Groups Controller Expire"
+  },
+  "payment_groups_controller_validate": {
+    "title": "Payment Groups Controller Validate"
+  }
+}

@@ -1,0 +1,25 @@
+import SDKHeader from './_header/sdk.mdx';
+import OperationHeader from '/src/components/OperationHeader';
+
+###### *Payment Intents*
+
+<OperationHeader
+  sdkHeader={<SDKHeader />}
+/>
+
+{/* rendered from operation template */}
+
+import {LanguageOperation} from "/content/languages";
+import {LanguageSwitch} from "/content/languages";
+import TypescriptParameters from "./_parameters/typescript.mdx";
+import TypescriptResponse from "./_response/typescript.mdx";
+import TypescriptUsage from "./_usage/typescript.mdx";
+
+export const Operation = () => {
+    const typescript = <LanguageOperation  parameters={<TypescriptParameters/>} response={<TypescriptResponse/>} usage={<TypescriptUsage/>}/>
+    return <LanguageSwitch langToContent={{typescript}}/>
+}
+
+<Operation />
+
+{/* end rendered section */}

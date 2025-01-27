@@ -1,0 +1,15 @@
+```typescript PaymentGroupsControllerFindAll.ts
+import { SDK } from "openapi";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+
+  const res = await sdk.paymentGroups.paymentGroupsControllerFindAll();
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```

@@ -1,0 +1,39 @@
+
+import WithStatusBar from '@/src/components/WithStatusBar';
+
+<WithStatusBar statusItems={[["Status", "201"], ["Content-Type", "application/json"]]}>
+  <CH.Code>
+  ```typescript PaymentIntentsControllerCreate.ts
+  import { SDK } from "openapi";
+import { Status } from "openapi/dist/models/components";
+
+(async() => {
+  const sdk = new SDK({
+    bearer: "",
+  });
+
+  const res = await sdk.paymentIntents.paymentIntentsControllerCreate({
+    amount: 5000,
+    checkoutSessionId: "cs_1abc2def3ghi",
+    customerId: "cus_1abc2def3ghi",
+    metadata: {},
+    status: Status.RequiresPaymentMethod,
+  });
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+  ```
+  ---
+
+  ```json Example Response
+  {
+    "amount": 5000,
+    "checkoutSessionId": "cs_1abc2def3ghi",
+    "customerId": "cus_1abc2def3ghi",
+    "metadata": {}
+  }
+  ```
+  </CH.Code>
+</WithStatusBar>
